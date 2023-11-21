@@ -1,8 +1,0 @@
-{
-  "NOT_EMPTY": "This field is required.",
-  "WRONG_FORMAT_EMAIL": "Please enter a valid email format.",
-  "INVALID_BOOLEAN": "This field is not a boolean.",
-  "INVALID_STRING": "This field is not a string.",
-  "INVALID_USERNAME": "The name should be at least 2 characters long.",
-  "INVALID_PASSWORD": "Please enter a combination of alphanumeric characters with at least 6 characters."
-}

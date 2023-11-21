@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { genSaltSync, hashSync } from 'bcrypt';
 import { FileUpload } from 'src/v1/files/entities/file-upload.entity';
+import { instanceToPlain } from 'class-transformer';
 
 export enum UserRole {
   User = 'USER',
@@ -22,13 +23,6 @@ export enum UserStatus {
   Deactivated = 'DEACTIVATED',
 }
 
-export enum ProviderType {
-  Email = 'EMAIL',
-  Google = 'GOOGLE',
-  Apple = 'APPLE',
-  Kakao = 'KAKAO',
-  Naver = 'NAVER',
-}
 @Entity('user')
 export class User extends WithTimestamp {
   @Index()
@@ -71,5 +65,11 @@ export class User extends WithTimestamp {
       const salt = genSaltSync(10);
       self.password = hashSync(self.password, salt);
     }
+  }
+
+  toJSON() {
+    const result = instanceToPlain(this);
+    delete result.password;
+    return result;
   }
 }

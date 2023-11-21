@@ -21,8 +21,6 @@ import { join } from 'path';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ExceptionsLoggerFilter } from './common/exception-filters/exceptions-logger.filter';
 import { ResponseInterceptor } from './common/interceptor/response.interceptor';
-import { ArtistModule } from './v1/artist/artist.module';
-import { BannerModule } from './v1/banner/banner.module';
 import smtpConfig from 'config/smtp.config';
 
 @Module({
@@ -62,8 +60,6 @@ import smtpConfig from 'config/smtp.config';
       port: process.env.REDIS_PORT,
     }),
     RedisCacheModule,
-    ArtistModule,
-    BannerModule,
   ],
   controllers: [AppController],
   providers: [

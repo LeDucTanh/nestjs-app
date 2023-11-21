@@ -1,12 +1,6 @@
 import { ITokenPayload } from './interface/token.interface';
 import { UUID } from '../../utils/utils';
-import {
-  forwardRef,
-  HttpException,
-  Inject,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/v1/user/user.service';
