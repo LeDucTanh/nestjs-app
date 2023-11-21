@@ -6,9 +6,7 @@ import { IRequest } from 'src/utils/interface/request.interface';
 
 @Controller()
 export class AuthenticationController {
-  constructor(
-    private readonly authService: AuthenticationService, // private readonly usersService: UserService,
-  ) {}
+  constructor(private readonly authService: AuthenticationService) {}
 
   @Post('register')
   async register(@Body() dto: RegisterUserDto) {
