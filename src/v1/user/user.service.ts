@@ -69,6 +69,16 @@ export class UserService extends BaseService<User, UserRepository> {
     return user;
   }
 
+  async getMe(reqUser: IRequestUser) {
+    return this.repo.findOne({
+      where: {
+        id: reqUser.userId,
+        status: UserStatus.Active,
+        role: UserRole.User,
+      },
+    });
+  }
+
   async adminLogin(email: string, password: string): Promise<User> {
     const user = await this.repo.findOne({
       where: {

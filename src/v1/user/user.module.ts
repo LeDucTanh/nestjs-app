@@ -8,12 +8,11 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { CommonModule } from 'src/common/common.module';
 import { AuthenticationModule } from '../auth/authen.module';
-import { FileUpload } from '../files/entities/file-upload.entity';
 import { AdminUserController } from './admin-user.controller';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, FileUpload]),
+    TypeOrmModule.forFeature([User]),
     CommonModule,
     forwardRef(() => AuthenticationModule),
   ],

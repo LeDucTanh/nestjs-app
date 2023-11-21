@@ -8,7 +8,6 @@ import {
   OneToOne,
 } from 'typeorm';
 import { genSaltSync, hashSync } from 'bcrypt';
-import { FileUpload } from 'src/v1/files/entities/file-upload.entity';
 import { instanceToPlain } from 'class-transformer';
 
 export enum UserRole {
@@ -48,15 +47,6 @@ export class User extends WithTimestamp {
 
   @Column('varchar', { nullable: true, length: 255 })
   email: string;
-
-  @OneToOne(() => FileUpload, {
-    nullable: true,
-  })
-  @JoinColumn()
-  avatar: FileUpload;
-
-  @Column('int', { nullable: true })
-  avatarId: number;
 
   @BeforeInsert()
   hashPassword(): void {

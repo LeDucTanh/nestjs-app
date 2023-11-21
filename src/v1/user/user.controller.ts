@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Put,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Put, Req } from '@nestjs/common';
 
 import { UserService } from './user.service';
 import { IRequest } from 'src/utils/interface/request.interface';
@@ -22,5 +14,11 @@ export class UserController {
   @Auth(USER_PERMISSION)
   async update(@Body() dto: UpdateUserDto, @Req() req: IRequest) {
     return this.userService.updateUser(dto, req.user);
+  }
+
+  @Get('me')
+  @Auth(USER_PERMISSION)
+  getMe(@Req() req: IRequest) {
+    return this.userService.getMe(req.user);
   }
 }
