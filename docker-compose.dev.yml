@@ -1,0 +1,79 @@
+version: '3.2'
+services:
+  beautygo-db:
+    container_name: ${PROJECT_NAME}-db
+    image: mysql:8.0.33
+    ports:
+      - ${MYSQL_PORT}:${DATABASE_PORT}
+    restart: always
+    environment:
+      - MYSQL_DATABASE=${DATABASE_DATABASE}
+      - MYSQL_USER=${DATABASE_USER}
+      - MYSQL_PASSWORD=${DATABASE_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./mysql-volume:/var/lib/mysql
+    networks:
+      - beautygo-network
+  beautygo-backend-dev:
+    container_name: ${PROJECT_NAME}-backend-dev
+    command: bash -c "yarn install && yarn run start:dev --debug 0.0.0.0:9229"
+    restart: always
+    tty: true
+    stdin_open: true
+    build:
+      context: $PWD
+      dockerfile: $PWD/docker/App.Dockerfile
+      target: development
+    volumes:
+      - $PWD:/app
+    ports:
+      - ${PORT}:${PORT}
+      - 9229:9229
+    networks:
+      - beautygo-network
+  beautygo-redis:
+    container_name: '${PROJECT_NAME}-redis'
+    restart: on-failure
+    image: redis:6.0.8
+    ports:
+      - '${REDIS_PORT}:6379'
+    networks:
+      - beautygo-network
+  redis-commander:
+    image: rediscommander/redis-commander
+    ports:
+      - '8081:8081'
+    environment:
+      - REDIS_HOSTS=local:beautygo-redis:6379
+    depends_on:
+      - beautygo-redis
+    networks:
+      - beautygo-network
+  # beautygo-nginx:
+  #   build:
+  #     context: $PWD/docker/nginx/
+  #     args:
+  #         BUILD_NGINX_DOMAIN: $BUILD_NGINX_DOMAIN
+  #         PROJECT_NAME: $PROJECT_NAME
+  #         PORT: $PORT
+  #   container_name: '${PROJECT_NAME}-nginx'
+  #   depends_on:
+  #     - ${PROJECT_NAME}-backend-dev
+  #   # volumes:
+  #   #   - beautygo-nginx:/etc/nginx/conf.d
+  #   #   - beautygo-letsencrypt:/etc/letsencrypt
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - ${WEB_PORT}:80
+  #     - 443:443
+  #   restart: always
+  #   networks:
+  #     - beautygo-network
+networks:
+  beautygo-network:
+volumes:
+  beautygo-db:
+  #beautygo-nginx:

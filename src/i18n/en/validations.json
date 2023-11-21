@@ -1,0 +1,9 @@
+{
+  "NOT_EMPTY": "this field cannot be empty",
+  "INVALID_EMAIL": "this field is not email",
+  "INVALID_BOOLEAN": "this field is not a boolean",
+  "MIN_PASSWORD": "password must be longer than or equal to 8 characters",
+  "MAX_PASSWORD": "password must be shorter than or equal to 50 characters",
+  "PASSWORD_WEAK": "password too weak",
+  "INVALID_STRING": "this field is not a string"
+}
