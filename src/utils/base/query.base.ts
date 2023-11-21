@@ -6,7 +6,6 @@ class ConditionQuery {
   public create(data: any = {}, keySearch: string) {
     const conditions = {};
 
-    conditions['status'] = Not('REMOVED');
     if (data.status) conditions['status'] = data.status;
 
     if (data.keySearch) {
@@ -18,7 +17,7 @@ class ConditionQuery {
     }
 
     if (data.userId) {
-      conditions['user'] = { id: data.userId, status: Not(UserStatus.Removed) };
+      conditions['user'] = { id: data.userId };
     }
 
     const dateFilterField = data.dateFilterField
@@ -52,8 +51,6 @@ class ConditionQuery {
   public search(data: any = {}, conditions: any = {}) {
     const { keyword } = data;
     if (keyword && data.keySearch) {
-      // delete conditions['name'];
-      // delete conditions[data.keySearch];
       const keySearch = data.keySearch.split(',');
       conditions =
         keySearch.length &&

@@ -1,9 +1,8 @@
 {
-  "NOT_EMPTY": "필수 입력 사항입니다.",
-  "WRONG_FORMAT_EMAIL": "이메일 양식에 맞게 입력해주세요.",
-  "INVALID_BOOLEAN": "이 필드는 부울이 아닙니다.",
-  "INVALID_STRING": "이 필드는 문자열이 아닙니다",
-  "INVALID_ID_LOGIN": "영문, 숫자의 조합으로 3자리 이상 입력해주세요.",
-  "INVALID_USERNAME": "이름은 최소 2글자 이상이어야 합니다.",
-  "INVALID_PASSWORD": "영문, 숫자의 조합으로 6자리 이상 입력해주세요."
+  "NOT_EMPTY": "This field is required.",
+  "WRONG_FORMAT_EMAIL": "Please enter a valid email format.",
+  "INVALID_BOOLEAN": "This field is not a boolean.",
+  "INVALID_STRING": "This field is not a string.",
+  "INVALID_USERNAME": "The name should be at least 2 characters long.",
+  "INVALID_PASSWORD": "Please enter a combination of alphanumeric characters with at least 6 characters."
 }

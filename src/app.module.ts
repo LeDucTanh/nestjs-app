@@ -23,9 +23,6 @@ import { ExceptionsLoggerFilter } from './common/exception-filters/exceptions-lo
 import { ResponseInterceptor } from './common/interceptor/response.interceptor';
 import { ArtistModule } from './v1/artist/artist.module';
 import { BannerModule } from './v1/banner/banner.module';
-import { MakeupStyleModule } from './v1/makeup-style/makeup-style.module';
-import { HairStyleModule } from './v1/hair-style/hair-style.module';
-import { PersonalColorModule } from './v1/personal-color/personal-color.module';
 import smtpConfig from 'config/smtp.config';
 
 @Module({
@@ -36,7 +33,6 @@ import smtpConfig from 'config/smtp.config';
       validationSchema: EnvValidation,
       isGlobal: true,
       cache: true,
-      //envFilePath: ['.local.env', '.development.env', '.staging.env', '.production.env'],
       load: [config, appConfig, jwtConfig, databaseConfig, smtpConfig],
     }),
     TypeOrmModule.forRootAsync({
@@ -68,9 +64,6 @@ import smtpConfig from 'config/smtp.config';
     RedisCacheModule,
     ArtistModule,
     BannerModule,
-    MakeupStyleModule,
-    HairStyleModule,
-    PersonalColorModule,
   ],
   controllers: [AppController],
   providers: [

@@ -2,16 +2,24 @@ import {
   BaseEntity,
   DeepPartial,
   FindManyOptions,
-  FindOneOptions, FindOptionsWhere,
-  SaveOptions
+  FindOneOptions,
+  FindOptionsWhere,
+  Repository,
+  SaveOptions,
+  SelectQueryBuilder,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { BaseRepository } from './base.repository';
 import { IBaseService } from './base.service.interface';
+import _ from 'lodash';
 
-export class BaseService<T extends BaseEntity, R extends BaseRepository<T>> implements IBaseService<T> {
-  
+export class BaseService<T extends BaseEntity, R extends BaseRepository<T>>
+  implements IBaseService<T>
+{
   protected readonly repository: R;
+  protected sortableColumns: any = ['id'];
+  protected defaultSortBy: any = [['id', 'DESC']];
+  protected filterableColumns: any = {};
 
   constructor(repository: R) {
     this.repository = repository;
@@ -25,7 +33,10 @@ export class BaseService<T extends BaseEntity, R extends BaseRepository<T>> impl
     return this.repository.findOne(options);
   }
 
-  async findOneAndCreate(where: FindOptionsWhere<T>, data: DeepPartial<T>): Promise<T> {
+  async findOneAndCreate(
+    where: FindOptionsWhere<T>,
+    data: DeepPartial<T>,
+  ): Promise<T> {
     const record = await this.repository.findOne({ where });
     if (record) return record;
     return this.repository.create(data);
@@ -51,7 +62,10 @@ export class BaseService<T extends BaseEntity, R extends BaseRepository<T>> impl
     return this.repository.save(entities, options);
   }
 
-  async updateOneById(id: number, data: QueryDeepPartialEntity<T>): Promise<void> {
+  async updateOneById(
+    id: number,
+    data: QueryDeepPartialEntity<T>,
+  ): Promise<void> {
     await this.repository.updateOneById(id, data);
   }
 

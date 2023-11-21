@@ -30,21 +30,15 @@ export class AuthenticationService {
     return user;
   }
 
-  async login(userLogin: LoginUserDto) {
-    const user = await this.usersService.login(
-      userLogin.idLogin,
-      userLogin.password,
-    );
+  async login(dto: LoginUserDto) {
+    const user = await this.usersService.login(dto.email, dto.password);
     const tokens = await this.generateTokens(user, UUID);
 
     return { user, tokens };
   }
 
-  async adminLogin(userLogin: LoginUserDto) {
-    const user = await this.usersService.adminLogin(
-      userLogin.idLogin,
-      userLogin.password,
-    );
+  async adminLogin(dto: LoginUserDto) {
+    const user = await this.usersService.adminLogin(dto.email, dto.password);
     const tokens = await this.generateTokens(user, UUID);
 
     return { user, tokens };

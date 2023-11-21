@@ -3,25 +3,3 @@ FROM node:18 AS development
 WORKDIR /app
 
 RUN npm i -g @nestjs/cli@9.0.0
-
-CMD yarn run start:dev --debug 0.0.0.0:9229
-
-FROM node:18 AS builder
-
-WORKDIR /app
-
-COPY . .
-
-RUN npm i -g @nestjs/cli@9.0.0 \
-    && yarn install \
-    && yarn build 
-
-FROM node:18 AS production
-
-WORKDIR /app
-
-COPY --from=builder /app/node_modules ./node_modules
-
-COPY --from=builder /app/dist ./dist
-
-CMD ["node", "dist/main.js"]

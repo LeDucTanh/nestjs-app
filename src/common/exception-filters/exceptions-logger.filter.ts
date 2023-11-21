@@ -8,9 +8,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { I18nService } from 'nestjs-i18n';
-import { EntityNotFoundError, QueryFailedError, TypeORMError } from 'typeorm';
 
-// @Catch(HttpException, QueryFailedError, EntityNotFoundError, TypeORMError)
 @Catch(HttpException)
 export class ExceptionsLoggerFilter implements ExceptionFilter {
   constructor(private readonly i18n?: I18nService) {}
@@ -20,7 +18,7 @@ export class ExceptionsLoggerFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const status = exception.getStatus() || HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const lang = 'kr';
+    const lang = 'en';
 
     const responseBody: any = exception.getResponse();
     let messages: any;

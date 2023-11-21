@@ -5,16 +5,10 @@ import {
   Entity,
   Index,
   JoinColumn,
-  ManyToOne,
   OneToOne,
-  Unique,
 } from 'typeorm';
 import { genSaltSync, hashSync } from 'bcrypt';
 import { FileUpload } from 'src/v1/files/entities/file-upload.entity';
-import { MakeupStyle } from './makeup-style.entity';
-import { HairStyle } from './hair-style.entity';
-import { MakeupType } from './makeup-type.entity';
-import { PersonalColor } from './personal-color.entity';
 
 export enum UserRole {
   User = 'USER',
@@ -26,7 +20,6 @@ export enum UserRole {
 export enum UserStatus {
   Active = 'ACTIVE',
   Deactivated = 'DEACTIVATED',
-  Removed = 'REMOVED',
 }
 
 export enum ProviderType {
@@ -50,19 +43,7 @@ export class User extends WithTimestamp {
   @Column({ type: 'enum', enum: UserStatus, default: UserStatus.Active })
   status: UserStatus;
 
-  @Index()
-  @Column({
-    type: 'enum',
-    enum: ProviderType,
-    default: ProviderType.Email,
-  })
-  providerType: ProviderType;
-
-  @Index()
-  @Column('varchar', { length: 255, nullable: true })
-  idLogin: string;
-
-  @Column('text', { nullable: true })
+  @Column('varchar', { length: 65, nullable: true })
   username: string;
 
   @Column('varchar', { length: 255, nullable: true })
@@ -74,21 +55,6 @@ export class User extends WithTimestamp {
   @Column('varchar', { nullable: true, length: 255 })
   email: string;
 
-  @Column({
-    type: 'timestamp',
-    nullable: true,
-  })
-  birthDate: Date;
-
-  @Column('text', { nullable: true })
-  socialId: string;
-
-  @Column('float', { nullable: true })
-  lat: number;
-
-  @Column('float', { nullable: true })
-  long: number;
-
   @OneToOne(() => FileUpload, {
     nullable: true,
   })
@@ -97,46 +63,6 @@ export class User extends WithTimestamp {
 
   @Column('int', { nullable: true })
   avatarId: number;
-
-  @ManyToOne(() => MakeupStyle, (makeupStyle) => makeupStyle.users, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn()
-  makeupStyle: MakeupStyle;
-
-  @Column('int', { nullable: true })
-  makeupStyleId: number;
-
-  @ManyToOne(() => MakeupType, (_) => _.users, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn()
-  makeupType: MakeupType;
-
-  @Column('int', { nullable: true })
-  makeupTypeId: number;
-
-  @ManyToOne(() => HairStyle, (_) => _.users, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn()
-  hairStyle: HairStyle;
-
-  @Column('int', { nullable: true })
-  hairStyleId: number;
-
-  @ManyToOne(() => PersonalColor, (_) => _.users, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn()
-  personalColor: PersonalColor;
-
-  @Column('int', { nullable: true })
-  personalColorId: number;
 
   @BeforeInsert()
   hashPassword(): void {

@@ -20,7 +20,9 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
           let authorization = request?.headers?.authorization;
-          return authorization.replace('Bearer ', '');
+          if (authorization) {
+            return authorization.replace('Bearer ', '');
+          }
         },
       ]),
       secretOrKey: configService.get('jwt.refreshTokenSecret'),

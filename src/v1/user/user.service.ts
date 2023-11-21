@@ -18,45 +18,30 @@ import { ADMIN_PERMISSION } from '../auth/permission/permission';
 @Injectable()
 export class UserService extends BaseService<User, UserRepository> {
   constructor(
-    private readonly usersRepository: UserRepository,
+    private readonly repo: UserRepository,
     @Inject(forwardRef(() => AuthenticationService))
     private readonly authenticationService: AuthenticationService,
   ) {
-    super(usersRepository);
+    super(repo);
   }
 
   async register(dto: RegisterUserDto) {
-    let user = await this.usersRepository.findOne({
-      select: {
-        id: true,
-      },
-      where: {
-        username: dto.username,
-        role: UserRole.User,
-        status: UserStatus.Active,
-      },
+    const checkUser = await this.repo.findOne({
+      where: [
+        { email: dto.email, status: UserStatus.Active, role: UserRole.User },
+        {
+          phoneNumber: dto.phoneNumber,
+          status: UserStatus.Active,
+          role: UserRole.User,
+        },
+      ],
     });
 
-    if (user) {
-      throw new BadRequestException('USERNAME_EXISTED');
-    }
-
-    user = await this.findIdLogin(dto.idLogin);
-
-    if (user) {
-      throw new BadRequestException('ID_LOGIN_EXISTED');
-    }
-
-    const [email, phoneNumber] = await Promise.all([
-      this.findEmail(dto.email),
-      this.findPhoneNumber(dto.phoneNumber),
-    ]);
-
-    if (email) {
+    if (checkUser && checkUser.email == dto.email) {
       throw new BadRequestException('EMAIL_EXISTED');
     }
 
-    if (phoneNumber) {
+    if (checkUser && checkUser.phoneNumber == dto.phoneNumber) {
       throw new BadRequestException('PHONE_NUMBER_EXISTED');
     }
 
@@ -66,15 +51,11 @@ export class UserService extends BaseService<User, UserRepository> {
 
     delete dto.confirmPassword;
 
-    user = await this.usersRepository.create(dto);
-
-    await this.usersRepository.save(user);
-
-    return user;
+    return await this.repo.create(dto);
   }
 
   async login(idLogin: string, password: string): Promise<User> {
-    const user = await this.findIdLogin(idLogin);
+    const user = await this._findOne(idLogin);
     if (!user) {
       throw new NotFoundException('ACCOUNT_NOT_REGISTERED');
     }
@@ -88,10 +69,10 @@ export class UserService extends BaseService<User, UserRepository> {
     return user;
   }
 
-  async adminLogin(idLogin: string, password: string): Promise<User> {
-    const user = await this.usersRepository.findOne({
+  async adminLogin(email: string, password: string): Promise<User> {
+    const user = await this.repo.findOne({
       where: {
-        idLogin,
+        email,
         role: In(ADMIN_PERMISSION),
         status: UserStatus.Active,
       },
@@ -110,7 +91,7 @@ export class UserService extends BaseService<User, UserRepository> {
   }
 
   async updateUser(dto: UpdateUserDto, user: IRequestUser) {
-    const userUpdate = await this.usersRepository.findOne({
+    const userUpdate = await this.repo.findOne({
       where: {
         id: user.userId,
         status: UserStatus.Active,
@@ -120,39 +101,13 @@ export class UserService extends BaseService<User, UserRepository> {
       throw new NotFoundException('USER_NOT_FOUND');
     }
 
-    return this.usersRepository.updateOneAndReturnById(user.userId, dto, null);
+    return this.repo.updateOneAndReturnById(user.userId, dto, null);
   }
 
-  private async findIdLogin(idLogin: string) {
-    return this.usersRepository.findOne({
-      where: {
-        idLogin,
-        role: UserRole.User,
-        status: UserStatus.Active,
-      },
-    });
-  }
-
-  private async findEmail(email: string) {
-    return this.usersRepository.findOne({
-      select: {
-        id: true,
-      },
+  private async _findOne(email: string) {
+    return this.repo.findOne({
       where: {
         email,
-        role: UserRole.User,
-        status: UserStatus.Active,
-      },
-    });
-  }
-
-  private async findPhoneNumber(phoneNumber: string) {
-    return this.usersRepository.findOne({
-      select: {
-        id: true,
-      },
-      where: {
-        phoneNumber,
         role: UserRole.User,
         status: UserStatus.Active,
       },
