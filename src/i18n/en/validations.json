@@ -5,5 +5,6 @@
   "MIN_PASSWORD": "password must be longer than or equal to 8 characters",
   "MAX_PASSWORD": "password must be shorter than or equal to 50 characters",
   "PASSWORD_WEAK": "password too weak",
-  "INVALID_STRING": "this field is not a string"
+  "INVALID_STRING": "this field is not a string",
+  "AMOUNT_LIMIT": "The amount must be at least 20000."
 }

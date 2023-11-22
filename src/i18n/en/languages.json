@@ -29,5 +29,9 @@
   "PERMISSION_DENIED": "Permission denied.",
   "VERIFICATION_NOT_FOUND": "Verification code not found.",
   "PLEASE_VERIFICATION_FIRST": "Please enter the verification code first.",
-  "USER_NOT_FOUND": "User not found."
+  "USER_NOT_FOUND": "User not found.",
+  "BANK_ACCOUNT_NOT_FOUND": "Bank account not found.",
+  "NOT_ALLOW_TRANSFER_TO_ITSELF": "Transfer to the same account is not allowed.",
+  "ACCOUNT_NUMBER_NOT_FOUND": "The account number not found.",
+  "INSUFFICIENT_BALANCE": "Your account does not have sufficient balance."
 }

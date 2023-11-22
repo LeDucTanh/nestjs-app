@@ -11,6 +11,7 @@ import {
 import { genSaltSync, hashSync } from 'bcrypt';
 import { instanceToPlain } from 'class-transformer';
 import { BankAccount } from 'src/v1/bank-account/entities/bank-account.entity';
+import { Transaction } from 'src/v1/transaction/entities/transaction.entity';
 
 export enum UserRole {
   User = 'USER',
@@ -52,6 +53,9 @@ export class User extends WithTimestamp {
 
   @OneToMany(() => BankAccount, (_) => _.user)
   accounts: BankAccount[];
+
+  @OneToMany(() => Transaction, (_) => _.user)
+  transactions: Transaction[];
 
   @BeforeInsert()
   hashPassword(): void {
