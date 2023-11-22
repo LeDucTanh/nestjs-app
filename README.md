@@ -30,13 +30,8 @@
 
 ```bash
 cp example.env .env
-```
-
-## Running the app
-
-```bash
-# development
 docker compose up bank-backend-dev -d
+```
 
 ## Support
 
@@ -51,4 +46,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+```
+
 ```
