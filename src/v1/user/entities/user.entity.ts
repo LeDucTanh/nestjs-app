@@ -5,10 +5,12 @@ import {
   Entity,
   Index,
   JoinColumn,
+  OneToMany,
   OneToOne,
 } from 'typeorm';
 import { genSaltSync, hashSync } from 'bcrypt';
 import { instanceToPlain } from 'class-transformer';
+import { BankAccount } from 'src/v1/bank-account/entities/bank-account.entity';
 
 export enum UserRole {
   User = 'USER',
@@ -47,6 +49,9 @@ export class User extends WithTimestamp {
 
   @Column('varchar', { nullable: true, length: 255 })
   email: string;
+
+  @OneToMany(() => BankAccount, (_) => _.user)
+  accounts: BankAccount[];
 
   @BeforeInsert()
   hashPassword(): void {

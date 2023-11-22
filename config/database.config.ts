@@ -8,8 +8,8 @@ export default registerAs('database', () => ({
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_DATABASE,
   entities: ['dist/**/*.entity{.ts,.js}'],
-  synchronize: process.env.NODE_ENV !== 'production',
+  synchronize: true,
   autoLoadEntities: true,
   retryAttempts: 3,
-  logging: false
+  logging: false,
 }));

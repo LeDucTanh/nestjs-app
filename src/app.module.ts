@@ -41,7 +41,7 @@ import smtpConfig from 'config/smtp.config';
       name: 'default',
     }),
     I18nModule.forRoot({
-      fallbackLanguage: 'kr',
+      fallbackLanguage: 'en',
       loaderOptions: {
         path: join(process.cwd(), '/src/i18n/'),
         watch: true,
