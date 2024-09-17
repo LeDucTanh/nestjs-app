@@ -30,7 +30,7 @@
 
 ```bash
 cp example.env .env
-docker compose up bank-backend-dev -d
+docker compose up bank_backend_dev -d
 ```
 
 ## Support

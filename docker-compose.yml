@@ -1,7 +1,7 @@
 version: '3.2'
 services:
-  bank-db:
-    container_name: ${PROJECT_NAME}-db
+  bank_db:
+    container_name: ${PROJECT_NAME}_db
     image: mysql:8.0.33
     ports:
       - ${MYSQL_PORT}:${DATABASE_PORT}
@@ -16,9 +16,9 @@ services:
     volumes:
       - ./mysql-volume:/var/lib/mysql
     networks:
-      - bank-network
-  bank-backend-dev:
-    container_name: ${PROJECT_NAME}-backend-dev
+      - bank_network
+  bank_backend_dev:
+    container_name: ${PROJECT_NAME}_backend_dev
     command: bash -c "rm -rf dist && yarn install && yarn build && yarn run start:dev --debug 0.0.0.0:9228"
     restart: always
     tty: true
@@ -33,16 +33,20 @@ services:
       - ${PORT}:${PORT}
       - 9228:9228
     networks:
-      - bank-network
-  bank-redis:
-    container_name: '${PROJECT_NAME}-redis'
-    restart: on-failure
-    image: redis:6.0.8
+      - bank_network
+  bank_redis:
+    container_name: '${PROJECT_NAME}_redis'
+    restart: always
+    image: redis:7.2.3
+    volumes:
+      - ./cache:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
     ports:
       - '${REDIS_PORT}:6379'
     networks:
-      - bank-network
+      - bank_network
 networks:
-  bank-network:
+  bank_network:
 volumes:
-  bank-db:
+  bank_db:
