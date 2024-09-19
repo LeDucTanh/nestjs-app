@@ -50,6 +50,14 @@ export class ImageFileController {
     return response.send(entity.data);
   }
 
+  @Get('page')
+  async getImageFileByTypeAndPage(
+    @Query('type') type: ImageFileType,
+    @Query('page') page: number,
+  ) {
+    return this.imageFileService.getImageFileByTypeAndPage(type, page);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.imageFileService.findOneWithoutData(+id);

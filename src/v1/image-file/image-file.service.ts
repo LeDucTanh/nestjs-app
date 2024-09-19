@@ -36,6 +36,24 @@ export class ImageFileService {
     return imageFile;
   }
 
+  async getImageFileByTypeAndPage(
+    type: ImageFileType,
+    page: number,
+  ): Promise<Omit<ImageFile, 'data'>> {
+    const imageFile = await this.imageFileRepository.findOne({
+      where: { type, page },
+      select: ['id', 'type', 'filename', 'page', 'createdAt', 'updatedAt'],
+    });
+
+    if (!imageFile) {
+      throw new NotFoundException(
+        `Image file with type ${type} and page ${page} not found`,
+      );
+    }
+
+    return imageFile;
+  }
+
   async findAll(type: ImageFileType) {
     return this.imageFileRepository.find({ where: { type } });
   }
