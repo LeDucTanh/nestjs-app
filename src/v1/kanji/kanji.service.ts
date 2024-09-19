@@ -11,6 +11,11 @@ import cv from '@u4/opencv4nodejs';
 import { fromPath } from 'pdf2pic';
 import pdfParse from 'pdf-parse';
 
+export enum FilterOptionType {
+  Name = 'name',
+  Meaning = 'meaning',
+}
+
 @Injectable()
 export class KanjiService {
   constructor(
@@ -19,7 +24,10 @@ export class KanjiService {
     private readonly imageFileService: ImageFileService,
   ) {}
 
-  async searchKanji(searchTerm: string): Promise<Kanji[]> {
+  async searchKanji(
+    searchTerm: string,
+    filterOption: FilterOptionType,
+  ): Promise<Kanji[]> {
     if (!searchTerm) {
       return [];
     }
@@ -28,19 +36,27 @@ export class KanjiService {
       searchTerm.toLowerCase(),
     );
 
-    return (
-      this.kanjiRepository
-        .createQueryBuilder('kanji')
-        .leftJoin('kanji.imageFile', 'imageFile')
-        .addSelect(['imageFile.type', 'imageFile.page'])
-        .where('LOWER(kanji.name) LIKE :searchTerm', {
+    const queryBuilder = this.kanjiRepository
+      .createQueryBuilder('kanji')
+      .leftJoin('kanji.imageFile', 'imageFile')
+      .addSelect(['imageFile.type', 'imageFile.page']);
+
+    switch (filterOption) {
+      case FilterOptionType.Name:
+        queryBuilder.where('LOWER(kanji.name) LIKE :searchTerm', {
           searchTerm: `${normalizedSearchTerm}`,
-        })
-        // .orWhere('LOWER(kanji.meaning) LIKE :searchTerm', {
-        //   searchTerm: `${normalizedSearchTerm}%`,
-        // })
-        .getMany()
-    );
+        });
+        break;
+      case FilterOptionType.Meaning:
+        queryBuilder.where('LOWER(kanji.meaning) LIKE :searchTerm', {
+          searchTerm: `%${normalizedSearchTerm}%`,
+        });
+        break;
+      default:
+        throw new Error('Invalid filter option');
+    }
+
+    return queryBuilder.getMany();
   }
 
   private normalizeVietnamese(str: string): string {

@@ -8,7 +8,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { KanjiService } from './kanji.service';
+import { FilterOptionType, KanjiService } from './kanji.service';
 import { Kanji } from './entities/kanji.entity';
 import { ImageFileType } from '../image-file/entities/image-file.entity';
 
@@ -32,8 +32,11 @@ export class KanjiController {
   // }
 
   @Get('search')
-  async searchKanji(@Query('keyWord') keyWord: string): Promise<Kanji[]> {
-    return this.kanjiService.searchKanji(keyWord.trim());
+  async searchKanji(
+    @Query('keyWord') keyWord: string,
+    @Query('type') type: FilterOptionType,
+  ): Promise<Kanji[]> {
+    return this.kanjiService.searchKanji(keyWord.trim(), type);
   }
 
   @Get('crop-images')
