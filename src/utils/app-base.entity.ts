@@ -27,4 +27,9 @@ export class WithTimestamp extends BaseEntity {
 
   @DeleteDateColumn({ type: 'timestamp' })
   deletedAt: Date;
+
+  constructor(args: any = {}) {
+    super();
+    Object.assign(this, args);
+  }
 }

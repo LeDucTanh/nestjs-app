@@ -80,7 +80,7 @@ export class UserService extends BaseService<User, UserRepository> {
         const config = {
           lang: 'vie+jpn',
           oem: 1,
-          psm: 11,
+          psm: 12,
         };
 
         const text = await tesseract.recognize(imagePath, config);

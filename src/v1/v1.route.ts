@@ -4,6 +4,8 @@ import { UserModule } from 'src/v1/user/user.module';
 import { AuthenticationModule } from './auth/authen.module';
 import { BankAccountModule } from './bank-account/bank-account.module';
 import { TransactionModule } from './transaction/transaction.module';
+import { ImageFileModule } from './image-file/image-file.module';
+import { KanjiModule } from './kanji/kanji.module';
 
 const routes: Routes = [
   {
@@ -13,6 +15,8 @@ const routes: Routes = [
       { path: 'auth', module: AuthenticationModule },
       { path: '/', module: BankAccountModule },
       { path: '/', module: TransactionModule },
+      { path: '/', module: ImageFileModule },
+      { path: '/', module: KanjiModule },
     ],
   },
 ];
