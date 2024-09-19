@@ -7,10 +7,15 @@ import {
   Delete,
   UploadedFile,
   UseInterceptors,
+  Query,
+  Res,
+  StreamableFile,
 } from '@nestjs/common';
 import { ImageFileService } from './image-file.service';
 import { ImageFileType } from './entities/image-file.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Response as ResponseExpress } from 'express';
+import { Readable } from 'stream';
 
 @Controller('image-file')
 export class ImageFileController {
@@ -30,8 +35,23 @@ export class ImageFileController {
     return await this.imageFileService.convertPdfToImage(type, file);
   }
 
+  @Get()
+  async getImageById(
+    @Query('id') id: string,
+    @Res() response: ResponseExpress,
+  ) {
+    const entity = await this.imageFileService.findOne(+id);
+
+    response.set({
+      'Content-Type': 'image/png',
+      'Content-Length': entity.data.length,
+    });
+
+    return response.send(entity.data);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.imageFileService.findOne(+id);
+    return this.imageFileService.findOneWithoutData(+id);
   }
 }

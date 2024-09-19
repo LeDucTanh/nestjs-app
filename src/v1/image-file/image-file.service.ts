@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ImageFile, ImageFileType } from './entities/image-file.entity';
@@ -21,6 +21,19 @@ export class ImageFileService {
 
   findOne(id: number) {
     return this.imageFileRepository.findOneBy({ id });
+  }
+
+  async findOneWithoutData(id: number): Promise<Omit<ImageFile, 'data'>> {
+    const imageFile = await this.imageFileRepository.findOne({
+      where: { id },
+      select: ['id', 'type', 'filename', 'page', 'createdAt', 'updatedAt'],
+    });
+
+    if (!imageFile) {
+      throw new NotFoundException(`Image file with ID ${id} not found`);
+    }
+
+    return imageFile;
   }
 
   async findAll(type: ImageFileType) {
@@ -112,6 +125,35 @@ export class ImageFileService {
       } else {
         throw new Error('Failed to process PDF: ' + error.message);
       }
+    }
+  }
+
+  async test(id: number): Promise<void> {
+    try {
+      const imageFile = await this.imageFileRepository.findOne({
+        where: { id },
+      });
+
+      if (!imageFile) {
+        throw new NotFoundException(`Image file with id ${id} not found`);
+      }
+
+      const outputDir = path.join(process.cwd(), 'output');
+
+      // Create output directory if it doesn't exist
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+      }
+
+      const outputPath = path.join(outputDir, imageFile.filename);
+
+      // Write the image data to a file
+      fs.writeFileSync(outputPath, imageFile.data);
+
+      console.log(`Image saved to ${outputPath}`);
+    } catch (error) {
+      console.error('Error getting image file:', error);
+      throw new Error('Failed to get image file: ' + error.message);
     }
   }
 }
