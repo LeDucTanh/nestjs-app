@@ -36,6 +36,8 @@ export class KanjiService {
       searchTerm.toLowerCase(),
     );
 
+    console.log('normalizedSearchTerm:', normalizedSearchTerm);
+
     const queryBuilder = this.kanjiRepository
       .createQueryBuilder('kanji')
       .leftJoin('kanji.imageFile', 'imageFile')
@@ -43,12 +45,12 @@ export class KanjiService {
 
     switch (filterOption) {
       case FilterOptionType.Name:
-        queryBuilder.where('LOWER(kanji.name) LIKE :searchTerm', {
+        queryBuilder.where('LOWER(kanji.unsignedName) LIKE :searchTerm', {
           searchTerm: `${normalizedSearchTerm}`,
         });
         break;
       case FilterOptionType.Meaning:
-        queryBuilder.where('LOWER(kanji.meaning) LIKE :searchTerm', {
+        queryBuilder.where('LOWER(kanji.unsignedMeaning) LIKE :searchTerm', {
           searchTerm: `%${normalizedSearchTerm}%`,
         });
         break;
@@ -57,6 +59,22 @@ export class KanjiService {
     }
 
     return queryBuilder.getMany();
+  }
+
+  async normalizeAllKanji(): Promise<void> {
+    const allKanji = await this.kanjiRepository.find();
+
+    for (const kanji of allKanji) {
+      if (kanji.name) {
+        kanji.unsignedName = this.normalizeVietnamese(kanji.name);
+      }
+
+      if (kanji.meaning) {
+        kanji.unsignedMeaning = this.normalizeVietnamese(kanji.meaning);
+      }
+
+      await this.kanjiRepository.save(kanji);
+    }
   }
 
   private normalizeVietnamese(str: string): string {

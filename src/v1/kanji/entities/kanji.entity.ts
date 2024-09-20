@@ -4,12 +4,17 @@ import { ImageFile } from 'src/v1/image-file/entities/image-file.entity';
 
 @Entity('kanji')
 export class Kanji extends WithTimestamp {
-  @Index('kanji_name_index')
   @Column('varchar', { length: 65, nullable: true })
   name: string;
 
   @Column('varchar', { length: 65, nullable: true })
   meaning: string;
+
+  @Column('varchar', { length: 65, nullable: true })
+  unsignedName: string;
+
+  @Column('varchar', { length: 65, nullable: true })
+  unsignedMeaning: string;
 
   @Column('text', { nullable: true })
   text: string;

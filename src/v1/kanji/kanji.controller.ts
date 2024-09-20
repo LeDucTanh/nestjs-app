@@ -21,6 +21,11 @@ export class KanjiController {
     return this.kanjiService.create(createKanjiDto);
   }
 
+  // @Post('normalize-all')
+  // async normalizeAllKanji() {
+  //   return this.kanjiService.normalizeAllKanji();
+  // }
+
   @Get()
   findAll() {
     return this.kanjiService.findAll();

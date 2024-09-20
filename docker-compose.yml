@@ -1,22 +1,22 @@
 version: '3.2'
 services:
-  bank_db:
-    container_name: ${PROJECT_NAME}_db
-    image: mysql:8.0.33
-    ports:
-      - ${MYSQL_PORT}:${DATABASE_PORT}
-    restart: always
-    environment:
-      - MYSQL_DATABASE=${DATABASE_DATABASE}
-      - MYSQL_USER=${DATABASE_USER}
-      - MYSQL_PASSWORD=${DATABASE_PASSWORD}
-      - MYSQL_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
-    command: --default-authentication-plugin=mysql_native_password
-      --sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
-    volumes:
-      - ./mysql-volume:/var/lib/mysql
-    networks:
-      - bank_network
+  # bank_db:
+  #   container_name: ${PROJECT_NAME}_db
+  #   image: mysql:8.0.33
+  #   ports:
+  #     - ${MYSQL_PORT}:${DATABASE_PORT}
+  #   restart: always
+  #   environment:
+  #     - MYSQL_DATABASE=${DATABASE_DATABASE}
+  #     - MYSQL_USER=${DATABASE_USER}
+  #     - MYSQL_PASSWORD=${DATABASE_PASSWORD}
+  #     - MYSQL_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
+  #   command: --default-authentication-plugin=mysql_native_password
+  #     --sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+  #   volumes:
+  #     - ./mysql-volume:/var/lib/mysql
+  #   networks:
+  #     - bank_network
   bank_backend_dev:
     container_name: ${PROJECT_NAME}_backend_dev
     command: bash -c "rm -rf dist && yarn install && yarn build && yarn run start:dev --debug 0.0.0.0:9228"
@@ -48,5 +48,5 @@ services:
       - bank_network
 networks:
   bank_network:
-volumes:
-  bank_db:
+# volumes:
+#   bank_db:

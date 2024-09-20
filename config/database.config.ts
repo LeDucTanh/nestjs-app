@@ -12,4 +12,7 @@ export default registerAs('database', () => ({
   autoLoadEntities: true,
   retryAttempts: 3,
   logging: false,
+  ssl: {
+    rejectUnauthorized: true,
+  },
 }));
