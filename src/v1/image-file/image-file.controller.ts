@@ -40,7 +40,14 @@ export class ImageFileController {
     @Query('id') id: string,
     @Res() response: ResponseExpress,
   ) {
+    if (id === 'undefined') {
+      return response.status(400).json({ error: 'Image ID is required' });
+    }
     const entity = await this.imageFileService.findOne(+id);
+
+    if (!entity) {
+      return response.status(404).json({ error: 'Image not found' });
+    }
 
     response.set({
       'Content-Type': 'image/png',
