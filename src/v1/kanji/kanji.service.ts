@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Kanji } from './entities/kanji.entity';
@@ -24,6 +29,27 @@ export class KanjiService {
     private readonly imageFileService: ImageFileService,
   ) {}
 
+  async updateNameAndMeaning(
+    id: number,
+    name: string,
+    meaning: string,
+  ): Promise<Kanji> {
+    const kanji = await this.kanjiRepository.findOneBy({ id });
+
+    if (!kanji) {
+      throw new NotFoundException('Kanji not found');
+    }
+
+    kanji.name = name;
+    kanji.meaning = meaning;
+
+    // Update unsigned fields
+    kanji.unsignedName = this.normalizeVietnamese(name);
+    kanji.unsignedMeaning = this.normalizeVietnamese(meaning);
+
+    return this.kanjiRepository.save(kanji);
+  }
+
   async searchKanji(
     searchTerm: string,
     filterOption: FilterOptionType,
@@ -35,8 +61,6 @@ export class KanjiService {
     const normalizedSearchTerm = this.normalizeVietnamese(
       searchTerm.toLowerCase(),
     );
-
-    console.log('normalizedSearchTerm:', normalizedSearchTerm);
 
     const queryBuilder = this.kanjiRepository
       .createQueryBuilder('kanji')
@@ -59,22 +83,6 @@ export class KanjiService {
     }
 
     return queryBuilder.getMany();
-  }
-
-  async normalizeAllKanji(): Promise<void> {
-    const allKanji = await this.kanjiRepository.find();
-
-    for (const kanji of allKanji) {
-      if (kanji.name) {
-        kanji.unsignedName = this.normalizeVietnamese(kanji.name);
-      }
-
-      if (kanji.meaning) {
-        kanji.unsignedMeaning = this.normalizeVietnamese(kanji.meaning);
-      }
-
-      await this.kanjiRepository.save(kanji);
-    }
   }
 
   private normalizeVietnamese(str: string): string {
@@ -457,6 +465,22 @@ export class KanjiService {
     } catch (error) {
       console.error('Error processing images:', error);
       throw new Error('Failed to process images: ' + error.message);
+    }
+  }
+
+  async normalizeAllKanji(): Promise<void> {
+    const allKanji = await this.kanjiRepository.find();
+
+    for (const kanji of allKanji) {
+      if (kanji.name) {
+        kanji.unsignedName = this.normalizeVietnamese(kanji.name);
+      }
+
+      if (kanji.meaning) {
+        kanji.unsignedMeaning = this.normalizeVietnamese(kanji.meaning);
+      }
+
+      await this.kanjiRepository.save(kanji);
     }
   }
 

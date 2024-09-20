@@ -60,8 +60,12 @@ export class KanjiController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateKanjiDto: Partial<Kanji>) {
-    return this.kanjiService.update(+id, updateKanjiDto);
+  async updateNameAndMeaning(
+    @Param('id') id: string,
+    @Body('name') name: string,
+    @Body('meaning') meaning: string,
+  ) {
+    return this.kanjiService.updateNameAndMeaning(+id, name, meaning);
   }
 
   @Delete(':id')
